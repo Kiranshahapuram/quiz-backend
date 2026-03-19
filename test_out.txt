@@ -1,0 +1,23 @@
+﻿1. POST /auth/register/ with valid data
+Status: 201
+Body: {"user":{"id":"3d9387ac-420f-49a3-9348-bbfd39c84523","email":"agent3@example.com","username":"agent","role":"user","is_active":true},"refresh":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc3NDQ5OTU4MywiaWF0IjoxNzczODk0NzgzLCJqdGkiOiJkZTFmNTgzMzIyZjg0NTg5YTY3ZTIzMjU4MDdjZmY5ZiIsInVzZXJfaWQiOiIzZDkzODdhYy00MjBmLTQ5YTMtOTM0OC1iYmZkMzljODQ1MjMifQ.JP0pirbvkkxrLEZ-LDkIgz0jgODsYB7i4oJ5w8NM_mI","access":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczODk2NTgzLCJpYXQiOjE3NzM4OTQ3ODMsImp0aSI6IjliMGQwM2ZkZjQyMDQ1NmJhZWY3ZjgwZTQ2NTAyOTA3IiwidXNlcl9pZCI6IjNkOTM4N2FjLTQyMGYtNDlhMy05MzQ4LWJiZmQzOWM4NDUyMyJ9.4P7ZbBRXslGrs8fooKUrGqCQNQx-RYbduR_aqXOQwbU"}
+
+2. POST /auth/register/ with duplicate email
+Status: 400
+Body: {"code":"VALIDATION_ERROR","message":"email: user with this email already exists.","field":"email","details":{"email":["user with this email already exists."]}}
+
+3. POST /auth/login/ with wrong password
+Status: 401
+Body: {"code":"INVALID_CREDENTIALS","message":"Invalid credentials."}
+
+4. GET /api/v1/quizzes/ without Authorization header
+Status: 401
+Body: {"code":"TOKEN_INVALID","message":"Authentication token was not provided or is invalid."}
+
+5. POST /auth/refresh/ with valid refresh token
+Status: 200
+Body: {"access":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczODk2NTgzLCJpYXQiOjE3NzM4OTQ3ODMsImp0aSI6IjljM2I0Mzk4MmIzZTQ4OGVhY2UxNDM2MjYyMzE5ZmE4IiwidXNlcl9pZCI6IjNkOTM4N2FjLTQyMGYtNDlhMy05MzQ4LWJiZmQzOWM4NDUyMyJ9.ky7PcMzUXxDQ9VI30JQ6FFz1heluOfS4KnsIQ1Xa4Gk"}
+
+6. POST /auth/logout/
+Status: 204
+Body: 
