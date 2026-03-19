@@ -1,7 +1,8 @@
 from django.db import models
-from core.models import BaseModel
+from core.models import CoreModel
+from apps.communities.models import Community
 
-class QuizRequest(BaseModel):
+class QuizRequest(CoreModel):
     STATUS_CHOICES = [
         ('pending', 'Pending'),
         ('processing', 'Processing'),
@@ -19,6 +20,7 @@ class QuizRequest(BaseModel):
     difficulty = models.CharField(max_length=20, choices=DIFFICULTY_CHOICES)
     question_count = models.IntegerField()
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    community = models.ForeignKey(Community, on_delete=models.SET_NULL, null=True, blank=True, related_name='quiz_requests')
     failure_reason = models.TextField(null=True, blank=True)
     quiz = models.OneToOneField('Quiz', on_delete=models.SET_NULL, null=True, blank=True, related_name='request_source')
 
@@ -37,7 +39,7 @@ class QuizRequest(BaseModel):
     def __str__(self):
         return f"{self.topic} ({self.status})"
 
-class Quiz(BaseModel):
+class Quiz(CoreModel):
     DIFFICULTY_CHOICES = [
         ('easy', 'Easy'),
         ('medium', 'Medium'),
@@ -50,12 +52,13 @@ class Quiz(BaseModel):
     difficulty = models.CharField(max_length=20, choices=DIFFICULTY_CHOICES)
     time_limit_secs = models.IntegerField(null=True, blank=True)
     is_published = models.BooleanField(default=False)
+    community = models.ForeignKey(Community, on_delete=models.SET_NULL, null=True, blank=True, related_name='quizzes')
     deleted_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return self.title
 
-class Question(BaseModel):
+class Question(CoreModel):
     quiz = models.ForeignKey('Quiz', on_delete=models.CASCADE, related_name='questions')
     body = models.TextField()
     question_type = models.CharField(max_length=50, default='multiple_choice')
@@ -65,7 +68,7 @@ class Question(BaseModel):
     def __str__(self):
         return f"Q{self.order}: {self.body[:50]}"
 
-class Option(BaseModel):
+class Option(CoreModel):
     question = models.ForeignKey('Question', on_delete=models.CASCADE, related_name='options')
     body = models.TextField()
     is_correct = models.BooleanField(default=False)

@@ -11,7 +11,8 @@ class QuizService:
             topic=quiz_request.topic,
             difficulty=quiz_request.difficulty,
             time_limit_secs=quiz_request.question_count * 60, # 1 minute per question default
-            is_published=True # Setting published automatically upon creation for now, per usual systems.
+            is_published=True, # Setting published automatically upon creation for now, per usual systems.
+            community=quiz_request.community
         )
         
         quiz_request.quiz = quiz

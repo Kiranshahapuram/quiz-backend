@@ -11,7 +11,15 @@ class QuizRequestReadSerializer(serializers.ModelSerializer):
 class QuizRequestCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuizRequest
-        fields = ('topic', 'difficulty', 'question_count')
+        fields = ('topic', 'difficulty', 'question_count', 'community')
+
+    def validate_community(self, value):
+        """Ensure the user is a member of the community they want to assign a quiz to."""
+        if value is not None:
+            user = self.context['request'].user
+            if not value.members.filter(id=user.id).exists():
+                raise serializers.ValidationError("You must be a member of this community.")
+        return value
 
     def create(self, validated_data):
         user = self.context['request'].user
@@ -38,6 +46,8 @@ class PublicQuizSerializer(serializers.ModelSerializer):
         fields = ('id', 'title', 'topic', 'difficulty', 'time_limit_secs', 'questions')
 
 class QuizListSerializer(serializers.ModelSerializer):
+    community_name = serializers.CharField(source='community.name', read_only=True, default=None)
+
     class Meta:
         model = Quiz
-        fields = ('id', 'title', 'topic', 'difficulty', 'time_limit_secs', 'created_at')
+        fields = ('id', 'title', 'topic', 'difficulty', 'time_limit_secs', 'community', 'community_name', 'created_at')

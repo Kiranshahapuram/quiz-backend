@@ -27,12 +27,17 @@ local_settings.py
 db.sqlite3
 db.sqlite3-journal
 media
+staticfiles/
 
 # Environment
 .env
 .venv
 venv/
 ENV/
+
+# Frontend (separate deployment)
+frontend-react/
+node_modules/
 
 # OS
 .DS_Store
@@ -41,6 +46,7 @@ Thumbs.db
 # Project Specific Tests/Logs
 test_out_p*
 test_phase*
+test_community_integration.py
 error*.txt
 models_list_new.txt
 test_gemini_simple.py
@@ -49,7 +55,9 @@ final_flow_test.py
 scaffold.py
 show_ai_quiz.py
 ans_*.json
+test_out.txt
 
 # IDEs
 .vscode/
 .idea/
+

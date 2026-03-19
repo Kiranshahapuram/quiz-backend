@@ -1,7 +1,7 @@
 from django.db import models
-from core.models import BaseModel
+from core.models import CoreModel
 
-class Attempt(BaseModel):
+class Attempt(CoreModel):
     STATUS_CHOICES = [
         ('in_progress', 'In Progress'),
         ('submitted', 'Submitted'),
@@ -22,7 +22,7 @@ class Attempt(BaseModel):
     def __str__(self):
         return f"{self.user.username} - {self.quiz.title} ({self.status})"
 
-class AttemptAnswer(BaseModel):
+class AttemptAnswer(CoreModel):
     attempt = models.ForeignKey('Attempt', on_delete=models.CASCADE, related_name='answers')
     question = models.ForeignKey('quizzes.Question', on_delete=models.CASCADE)
     selected_option = models.ForeignKey('quizzes.Option', on_delete=models.SET_NULL, null=True, blank=True)

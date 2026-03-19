@@ -5,7 +5,10 @@ import environ
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 env = environ.Env()
-environ.Env.read_env(BASE_DIR / '.env')
+# Only read .env if it exists (Railway provides env vars directly)
+env_file = BASE_DIR / '.env'
+if env_file.exists():
+    environ.Env.read_env(env_file)
 
 SECRET_KEY = env('SECRET_KEY', default='django-insecure-test')
 DEBUG = env.bool('DEBUG', default=True)
@@ -36,9 +39,11 @@ INSTALLED_APPS = [
     'apps.quizzes',
     'apps.attempts',
     'apps.analytics',
+    'apps.communities',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -47,7 +52,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'axes.middleware.AxesMiddleware',
 ]
 
@@ -125,7 +129,7 @@ CELERY_BROKER_URL = env('REDIS_URL', default='redis://localhost:6379/1')
 CELERY_RESULT_BACKEND = env('REDIS_URL', default='redis://localhost:6379/1')
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
-CELERY_TASK_ALWAYS_EAGER = True
+CELERY_TASK_ALWAYS_EAGER = env.bool('CELERY_TASK_ALWAYS_EAGER', default=True)
 
 # AI Keys
 GEMINI_API_KEY = env('GEMINI_API_KEY', default='')

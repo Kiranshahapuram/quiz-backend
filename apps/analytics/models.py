@@ -1,7 +1,7 @@
 from django.db import models
-from core.models import BaseModel
+from core.models import CoreModel
 
-class QuizAnalytics(BaseModel):
+class QuizAnalytics(CoreModel):
     quiz = models.OneToOneField('quizzes.Quiz', on_delete=models.CASCADE, related_name='analytics')
     total_attempts = models.IntegerField(default=0)
     avg_score_pct = models.FloatField(default=0.0)

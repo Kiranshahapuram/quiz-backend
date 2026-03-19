@@ -28,6 +28,15 @@ class AttemptViewSet(viewsets.GenericViewSet):
         quiz = get_object_or_404(Quiz, id=quiz_id)
         if not quiz.is_published:
             raise CustomAPIException("This quiz is not published.", code="QUIZ_NOT_PUBLISHED", status_code=403)
+        
+        # Verify access: user must be a community member or own the personal quiz
+        if quiz.community:
+            if not quiz.community.members.filter(id=request.user.id).exists():
+                raise CustomAPIException("You are not a member of this quiz's community.", code="PERMISSION_DENIED", status_code=403)
+        else:
+            # Personal quiz — only the creator can attempt
+            if hasattr(quiz, 'quiz_request') and quiz.quiz_request.user != request.user:
+                raise CustomAPIException("This is a private quiz.", code="PERMISSION_DENIED", status_code=403)
             
         try:
             attempt = Attempt.objects.create(user=request.user, quiz=quiz)

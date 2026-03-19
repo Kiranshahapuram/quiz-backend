@@ -55,8 +55,7 @@ class AIService:
 
         if groq_key and not groq_key.startswith('your_'):
             return cls._generate_via_groq(groq_key, prompt, count)
-        elif gemini_key and not gemini_key.startswith('AIza'):
-            # Using your new logic for Gemini 2.0/2.5
+        elif gemini_key and not gemini_key.startswith('your_'):
             return cls._generate_via_gemini(gemini_key, prompt, count)
         else:
             return cls._mock_generate(topic, difficulty, count)
